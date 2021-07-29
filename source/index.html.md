@@ -1,5 +1,5 @@
 ---
-title: API Reference
+title: Phone Number Storer API
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
@@ -8,8 +8,7 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
+  - Just testing Slate
 
 includes:
   - errors
@@ -21,221 +20,326 @@ code_clipboard: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+The Phone Number Storer API stores your phone numbers in your Phone Book on our dedicated servers. It allows you to:
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+* Add a phone number to the Phone Book
+* Modify or remove a record from your stored numbers
+* Fetch the details of a specific number
+* Download the whole Phone Book to your application
 
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
-
-# Authentication
-
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here" \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+<aside>
+Remember — Contact our support to get your <code>phoneBookID</code>!
 </aside>
 
-# Kittens
+# Methods
+The PhoneNumberStorer API supports the following methods:
 
-## Get All Kittens
+## Add a Number
 
 ```ruby
-require 'kittn'
+require 'phoneNumberStorer'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
+api = phoneNumberStorer::APIClient.add!('{
+		"phoneNumber": 2024441234,
+		"name":"George Washington",
+		"state":"DC"
+	}')
+api.phoneBook.post
 ```
 
 ```python
-import kittn
+import phoneNumberStorer
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
+api = phoneNumberStorer.add('{
+		"phoneNumber": 2024441234,
+		"name":"George Washington",
+		"state":"DC"
+	}')
+api.phoneBook.post()
 ```
 
 ```shell
-curl "http://example.com/api/kittens" \
-  -H "Authorization: meowmeowmeow"
+curl "http://example.com/api/phoneNumberStorer/{phoneBookID}/actions/add" \
+  -H "add: '{
+		"phoneNumber": 2024441234,
+		"name":"George Washington",
+		"state":"DC"
+	}'"
 ```
 
 ```javascript
-const kittn = require('kittn');
+const phoneNumberStorer = require('phoneNumberStorer');
 
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+let api = phoneNumberStorer.add('{
+		"phoneNumber": 2024441234,
+		"name":"George Washington",
+		"state":"DC"
+	}');
+let phoneNumberStorer = api.phoneBook.post();
 ```
 
-> The above command returns JSON structured like this:
+> The above command returns the following HTTP responses:
 
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+```HTTP
+			200	- Success
+			400 - Invalid request
+			1010 - Invalid phone number
+			1011 - Phone number exists
 ```
 
-This endpoint retrieves all kittens.
+This endpoint adds a phone number to the phone book.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`POST http://example.com/api/phoneNumberStorer/{phoneBookID}/actions/add`
 
 ### Query Parameters
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+Parameter | Type | Required | Description
+--------- | ------- | ----- | ------
+phoneNumber | uint64 | yes | The 10-digit phone number that also serves as the unique identifier of the record
+name | string | yes | The name of the person to associate with the number
+state | string | yes | The US state code, where the landline phone number is located or where the owner of the mobile phone number resides
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+## Update a Number
+
+```ruby
+require 'phoneNumberStorer'
+
+api = phoneNumberStorer::APIClient.update!('{
+		"phoneNumber": 2024441234,
+		"name":"Abraham Lincoln",
+		"state":"DC"
+	}')
+api.phoneBook.patch
+```
+
+```python
+import phoneNumberStorer
+
+api = phoneNumberStorer.update('{
+		"phoneNumber": 2024441234,
+		"name":"Abraham Lincoln",
+		"state":"DC"
+	}')
+api.phoneBook.patch()
+```
+
+```shell
+curl "http://example.com/api/phoneNumberStorer/{phoneBookID}/actions/update" \
+  -H "update: '{
+		"phoneNumber": 2024441234,
+		"name":"Abraham Lincoln",
+		"state":"DC"
+	}'"
+```
+
+```javascript
+const phoneNumberStorer = require('phoneNumberStorer');
+
+let api = phoneNumberStorer.update('{
+		"phoneNumber": 2024441234,
+		"name":"Abraham Lincoln",
+		"state":"DC"
+	}');
+let phoneNumberStorer = api.phoneBook.patch();
+```
+
+> The above command returns the following HTTP responses:
+
+```HTTP
+			200	- Success
+			400 - Invalid request
+			1010 - Invalid phone number
+```
+
+This endpoint adds or modifies the **name** and the **state** of a phone number.
+
+<aside class="notice">
+You cannot modify the <b>phoneNumber</b> field.
 </aside>
 
-## Get a Specific Kitten
+### HTTP Request
+
+`PATCH http://example.com/api/phoneNumberStorer/{phoneBookID}/actions/update`
+
+### Query Parameters
+
+Parameter | Type | Required | Description
+--------- | ------- | ----- | ------
+phoneNumber | uint64 | yes | The 10-digit phone number to identify the record that should be modified
+name | string | no | The name of the person to modify
+state | string | no | The US state of the phone number to modify
+
+## Get All Numbers
 
 ```ruby
-require 'kittn'
+require 'phoneNumberStorer'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
+api = phoneNumberStorer::APIClient.getAllNumbers!()
+api.phoneBook.get
 ```
 
 ```python
-import kittn
+import phoneNumberStorer
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
+api = phoneNumberStorer.getAllNumbers()
+api.phoneBook.get()
 ```
 
 ```shell
-curl "http://example.com/api/kittens/2" \
-  -H "Authorization: meowmeowmeow"
+curl "http://example.com/api/phoneNumberStorer/{phoneBookID}/actions/getAllNumbers" \
+  -H
 ```
 
 ```javascript
-const kittn = require('kittn');
+const phoneNumberStorer = require('phoneNumberStorer');
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+let api = phoneNumberStorer.getAllNumbers();
+let phoneNumberStorer = api.phoneBook.get();
 ```
 
-> The above command returns JSON structured like this:
+> The above command returns the following HTTP / JSON responses:
 
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
+```HTTP
+			200	- Success
+			400 - Invalid request
 ```
 
-This endpoint retrieves a specific kitten.
+```JSON
+[
+	{
+		"phoneNumber": 2024441234,
+		"name":"Abraham Lincoln",
+		"state":"DC"	
+	},
+	{
+		"phoneNumber": 9168458510,
+		"name":"Arnold Schwarzenegger",
+		"state":"CA"
+	}
+]	
+```
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+This endpoint returns all phone number records from the phone book.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET http://example.com/api/phoneNumberStorer/{phoneBookID}/actions/getAllNumbers`
 
-### URL Parameters
+### Query Parameters
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+This method takes no parameters.
 
-## Delete a Specific Kitten
+## Get Number Details
 
 ```ruby
-require 'kittn'
+require 'phoneNumberStorer'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
+api = phoneNumberStorer::APIClient.getNumberDetails!(9168458510)
+api.phoneBook.get
 ```
 
 ```python
-import kittn
+import phoneNumberStorer
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
+api = phoneNumberStorer.getNumberDetails(9168458510)
+api.phoneBook.get()
 ```
 
 ```shell
-curl "http://example.com/api/kittens/2" \
-  -X DELETE \
-  -H "Authorization: meowmeowmeow"
+curl "http://example.com/api/phoneNumberStorer/{phoneBookID}/actions/getNumberDetails" \
+  -H 9168458510
 ```
 
 ```javascript
-const kittn = require('kittn');
+const phoneNumberStorer = require('phoneNumberStorer');
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
+let api = phoneNumberStorer.getNumberDetails(9168458510);
+let phoneNumberStorer = api.phoneBook.get();
 ```
 
-> The above command returns JSON structured like this:
+> The above command returns the following HTTP / JSON responses:
 
-```json
+```HTTP
+			200	- Success
+			400 - Invalid request
+			1010 - Invalid phone number
+```
+
+```JSON
 {
-  "id": 2,
-  "deleted" : ":("
+	"phoneNumber": 9168458510,
+	"name":"Arnold Schwarzenegger",
+	"state":"CA"
 }
 ```
 
-This endpoint deletes a specific kitten.
+This endpoint returns the details of a particular phone number record from the phone book.
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`GET http://example.com/api/phoneNumberStorer/{phoneBookID}/actions/getNumberDetails`
 
-### URL Parameters
+### Query Parameters
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
+Parameter | Type | Required | Description
+--------- | ------- | ----- | ------
+phoneNumber | uint64 | yes | The 10-digit phone number to identify the record that should be fetched
+
+## Delete a Number
+
+```ruby
+require 'phoneNumberStorer'
+
+api = phoneNumberStorer::APIClient.deleteRecord!(9168458510)
+api.phoneBook.delete
+```
+
+```python
+import phoneNumberStorer
+
+api = phoneNumberStorer.deleteRecord(9168458510)
+api.phoneBook.delete()
+```
+
+```shell
+curl "http://example.com/api/phoneNumberStorer/{phoneBookID}/actions/deleteRecord" \
+  -H 9168458510
+```
+
+```javascript
+const phoneNumberStorer = require('phoneNumberStorer');
+
+let api = phoneNumberStorer.deleteRecord(9168458510);
+let phoneNumberStorer = api.phoneBook.delete();
+```
+
+> The above command returns the following HTTP / JSON responses:
+
+```HTTP
+			200	- Success
+			400 - Invalid request
+			1010 - Invalid phone number
+```
+
+```JSON
+{
+	"phoneNumber": 9168458510,
+	"name":"Arnold Schwarzenegger",
+	"state":"CA"
+}
+```
+
+This endpoint returns the details of a particular phone number record from the phone book.
+
+### HTTP Request
+
+`DELETE http://example.com/api/phoneNumberStorer/{phoneBookID}/actions/deleteRecord`
+
+### Query Parameters
+
+Parameter | Type | Required | Description
+--------- | ------- | ----- | ------
+phoneNumber | uint64 | yes | The 10-digit phone number to identify the record that should be deleted
 
